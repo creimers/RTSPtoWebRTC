@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/deepch/vdk/av"
 	"github.com/deepch/vdk/codec/h264parser"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/pion/webrtc/v2"
 	"github.com/pion/webrtc/v2/pkg/media"
@@ -15,12 +16,20 @@ import (
 	"time"
 )
 
+type stream struct {
+	Name string `json:"name"`
+}
+
 func serveHTTP() {
 	router := gin.Default()
+
+	router.Use(cors.Default())
+
 	router.LoadHTMLGlob("web/templates/*")
 	router.GET("/", func(c *gin.Context) {
 		fi, all := Config.list()
 		sort.Strings(all)
+
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"port":     Config.Server.HTTPPort,
 			"suuid":    fi,
@@ -37,6 +46,16 @@ func serveHTTP() {
 			"suuidMap": all,
 			"version":  time.Now().String(),
 		})
+	})
+
+	// returns a list of available streams
+	router.GET("/streams", func(c *gin.Context) {
+		streams := []stream{}
+		_, all := Config.list()
+		for _, element := range all {
+			streams = append(streams, stream{Name: element})
+		}
+		c.JSON(200, streams)
 	})
 	router.POST("/recive", reciver)
 	router.StaticFS("/static", http.Dir("web/static"))
@@ -114,6 +133,9 @@ func reciver(c *gin.Context) {
 			return
 		}
 		c.Writer.Write([]byte(base64.StdEncoding.EncodeToString([]byte(answer.SDP))))
+
+		// what does this bad boy do?
+
 		go func() {
 			control := make(chan bool, 10)
 			conected := make(chan bool, 10)
