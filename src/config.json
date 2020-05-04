@@ -1,0 +1,10 @@
+{
+  "server": {
+    "http_port": ":8083"
+  },
+  "streams": {
+    "webcam": {
+      "url": "rtsp://admin:1234567@171.25.235.18/mpeg4"
+    }
+  }
+}

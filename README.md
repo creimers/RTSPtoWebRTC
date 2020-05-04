@@ -2,9 +2,9 @@
 
 RTSP Stream to WebBrowser over WebRTC based on Pion
 
-full native! not use ffmpeg or gstreamer
+Fully native! No use of ffmpeg or gstreamer.
 
-if you need RTSPtoWSMP4f use https://github.com/deepch/RTSPtoWSMP4f
+If you need RTSPtoWSMP4f use https://github.com/deepch/RTSPtoWSMP4f.
 
 ## Team
 
@@ -15,19 +15,27 @@ Dmitry - https://github.com/vdalex25 web developer
 ![RTSPtoWebRTC image](doc/demo4.png)
 
 ## Installation
+
 1.
+
 ```bash
 go get github.com/deepch/RTSPtoWebRTC
 ```
+
 2.
+
 ```bash
 cd src/github.com/deepch/RTSPtoWebRTC
 ```
+
 3.
+
 ```bash
 go run .
 ```
+
 4.
+
 ```bash
 open web browser http://127.0.0.1:8083 work google chrome
 ```
@@ -61,4 +69,4 @@ format:
 
 Video Codecs Supported: H264
 
-Audio Codecs Supported: alaw and mulaw 
+Audio Codecs Supported: alaw and mulaw

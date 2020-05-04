@@ -1,0 +1,24 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+schema:
+  - name: dingdong
+    path: .
+    commands:
+      install:
+        status: true
+        method: go build -o /go/src/dingdong/binary
+      run:
+        status: true
+        method: /go/src/dingdong/binary
+    watcher:
+      extensions:
+        - go
+      paths:
+        - /
+      ignored_paths:
+        - .git
+        - .realize
+        - vendor
+        - .history
