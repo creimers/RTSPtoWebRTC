@@ -1,4 +1,4 @@
-# RTSPtoWebRTC
+# rtsp to webrtc
 
 This repository is a fork of [deepch/RTSPtoWebRTC](https://github.com/deepch/RTSPtoWebRTC):
 
