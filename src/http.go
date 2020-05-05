@@ -11,7 +11,6 @@ import (
 	"github.com/pion/webrtc/v2/pkg/media"
 	"log"
 	"math/rand"
-	"net/http"
 	"sort"
 	"time"
 )
@@ -25,54 +24,31 @@ func serveHTTP() {
 
 	router.Use(cors.Default())
 
-	router.LoadHTMLGlob("web/templates/*")
-	router.GET("/", func(c *gin.Context) {
-		fi, all := Config.list()
-		sort.Strings(all)
-
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"port":     Config.Server.HTTPPort,
-			"suuid":    fi,
-			"suuidMap": all,
-			"version":  time.Now().String(),
-		})
-	})
-	router.GET("/player/:suuid", func(c *gin.Context) {
-		_, all := Config.list()
-		sort.Strings(all)
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"port":     Config.Server.HTTPPort,
-			"suuid":    c.Param("suuid"),
-			"suuidMap": all,
-			"version":  time.Now().String(),
-		})
-	})
-
 	// returns a list of available streams
 	router.GET("/streams", func(c *gin.Context) {
 		streams := []stream{}
 		_, all := Config.list()
+		sort.Strings(all)
 		for _, element := range all {
 			streams = append(streams, stream{Name: element})
 		}
 		c.JSON(200, streams)
 	})
 	router.POST("/recieve", reciever)
-	router.StaticFS("/static", http.Dir("web/static"))
 	err := router.Run(Config.Server.HTTPPort)
 	if err != nil {
 		log.Fatalln(err)
 	}
 }
 
-type StreamInput struct {
+type streamInput struct {
 	SUUID string `json:"suuid" binding:"required"`
 	Data  string `json:"data" binding:"required"`
 }
 
 func reciever(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	var input StreamInput
+	var input streamInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -80,13 +56,6 @@ func reciever(c *gin.Context) {
 	data := input.Data
 	suuid := input.SUUID
 
-	// data := c.PostForm("data")
-	// suuid := c.PostForm("suuid")
-
-	log.Println("#######################")
-	log.Println("        POST           ")
-	log.Println("#######################")
-	log.Println("Request", suuid)
 	if Config.ext(suuid) {
 		codecs := Config.coGe(suuid)
 		if codecs == nil {
@@ -147,9 +116,8 @@ func reciever(c *gin.Context) {
 			log.Println(err)
 			return
 		}
-		klonk := []byte(base64.StdEncoding.EncodeToString([]byte(answer.SDP)))
-		c.JSON(200, gin.H{"data": string(klonk)})
-		// c.Writer.Write([]byte(base64.StdEncoding.EncodeToString([]byte(answer.SDP))))
+		answerSdp := []byte(base64.StdEncoding.EncodeToString([]byte(answer.SDP)))
+		c.JSON(200, gin.H{"data": string(answerSdp)})
 
 		// what does this bad boy do?
 		go func() {

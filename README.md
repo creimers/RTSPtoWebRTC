@@ -1,72 +1,20 @@
 # RTSPtoWebRTC
 
-RTSP Stream to WebBrowser over WebRTC based on Pion
+This repository is a fork of [deepch/RTSPtoWebRTC](https://github.com/deepch/RTSPtoWebRTC):
 
-Fully native! No use of ffmpeg or gstreamer.
+> RTSP Stream to WebBrowser over WebRTC based on Pion.
 
-If you need RTSPtoWSMP4f use https://github.com/deepch/RTSPtoWSMP4f.
+Major diffs:
 
-## Team
+- transform the app into a JSON API
+- put into a docker container
 
-Deepch - https://github.com/deepch streaming developer
+Here is a React based demo client that goes along with it: [creimers/rtsp-to-webrtc-client](https://github.com/creimers/rtsp-to-webrtc-client).
 
-Dmitry - https://github.com/vdalex25 web developer
+## quickstart
 
-![RTSPtoWebRTC image](doc/demo4.png)
+Edit `./src/config.json` to suit your needs.
 
-## Installation
+Run `docker-compose build`
 
-1.
-
-```bash
-go get github.com/deepch/RTSPtoWebRTC
-```
-
-2.
-
-```bash
-cd src/github.com/deepch/RTSPtoWebRTC
-```
-
-3.
-
-```bash
-go run .
-```
-
-4.
-
-```bash
-open web browser http://127.0.0.1:8083 work google chrome
-```
-
-## Configuration
-
-### Edit file config.json
-
-format:
-
-```bash
-{
-  "server": {
-    "http_port": ":8083"
-  },
-  "streams": {
-    "demo1": {
-      "url": "rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa"
-    },
-    "demo2": {
-      "url": "rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa"
-    },
-    "demo3": {
-      "url": "rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa"
-    }
-  }
-}
-```
-
-## Limitations
-
-Video Codecs Supported: H264
-
-Audio Codecs Supported: alaw and mulaw
+Run `docker-compose up`
