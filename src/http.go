@@ -57,17 +57,32 @@ func serveHTTP() {
 		}
 		c.JSON(200, streams)
 	})
-	router.POST("/recive", reciver)
+	router.POST("/recieve", reciever)
 	router.StaticFS("/static", http.Dir("web/static"))
 	err := router.Run(Config.Server.HTTPPort)
 	if err != nil {
 		log.Fatalln(err)
 	}
 }
-func reciver(c *gin.Context) {
+
+type StreamInput struct {
+	SUUID string `json:"suuid" binding:"required"`
+	Data  string `json:"data" binding:"required"`
+}
+
+func reciever(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
-	data := c.PostForm("data")
-	suuid := c.PostForm("suuid")
+	var input StreamInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+	}
+	data := input.Data
+	suuid := input.SUUID
+
+	// data := c.PostForm("data")
+	// suuid := c.PostForm("suuid")
+
 	log.Println("#######################")
 	log.Println("        POST           ")
 	log.Println("#######################")
@@ -132,10 +147,11 @@ func reciver(c *gin.Context) {
 			log.Println(err)
 			return
 		}
-		c.Writer.Write([]byte(base64.StdEncoding.EncodeToString([]byte(answer.SDP))))
+		klonk := []byte(base64.StdEncoding.EncodeToString([]byte(answer.SDP)))
+		c.JSON(200, gin.H{"data": string(klonk)})
+		// c.Writer.Write([]byte(base64.StdEncoding.EncodeToString([]byte(answer.SDP))))
 
 		// what does this bad boy do?
-
 		go func() {
 			control := make(chan bool, 10)
 			conected := make(chan bool, 10)
