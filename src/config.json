@@ -10,7 +10,7 @@
       "url": "rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa"
     },
     "norway": {
-      "url": "rtsp://freja.hiof.no:1935/rtplive/definst/hessdalen03.stream"
+      "url": "rtsp://184.80.5.148:554/axis-media/media.amp?videocodec=h264"
     }
   }
 }
